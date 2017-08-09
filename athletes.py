@@ -1,5 +1,5 @@
+from urllib2 import urlopen
 from bs4 import BeautifulSoup
-import urllib.request
 import csv
 import re
 
@@ -8,7 +8,7 @@ csvout = "out.csv"
 all_sports_base = "http://www.virginiasports.com"
 
 # get lists of sports and their hrefs
-r = urllib.request.urlopen(all_sports_base).read()
+r = urlopen(all_sports_base).read()
 soup = BeautifulSoup(r, "html.parser")
 
 # get href to roster for each sport
@@ -28,10 +28,10 @@ for sport in sports:
 count = 1
 for sport_link in all_sports_links:
     # read url to specific sport
-    x = urllib.request.urlopen(all_sports_base + sport_link).read()
+    x = urlopen(all_sports_base + sport_link).read()
 
     sportname = sport_link.split("/")[2]
-    print("SPORT NAME: %s" % sportname)
+    #print("SPORT NAME: %s" % sportname)
 
     soup_sport = BeautifulSoup(x, "html.parser")
     roster = []
@@ -43,7 +43,7 @@ for sport_link in all_sports_links:
 
             # get url to player info (includes name, hometown, high school and other stats -- varies by sport)
             player_info_link = name_element.a.get("href")
-            y = urllib.request.urlopen(all_sports_base + player_info_link).read()
+            y = urlopen(all_sports_base + player_info_link).read()
             soup = BeautifulSoup(y, "html.parser")
 
             # check if hometown and high school are provided (hometown and high school are always the second and third elements
@@ -55,8 +55,8 @@ for sport_link in all_sports_links:
                 1] if infoExists >= 3 else "Not provided"
             roster.append(player)
 
-            print("Added data for %s" % player["name"])
-    print(roster)
+            #print("Added data for %s" % player["name"])
+    #print(roster)
     print("Sport %d/%d complete" % (count, len(all_sports_links)))
     count += 1
     all_sports_roster[sportname] = roster
